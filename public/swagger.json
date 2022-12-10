@@ -1,0 +1,252 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {},
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"info": {
+		"title": "back-personal-web-mern",
+		"version": "1.0.0",
+		"description": "- [Get the Project](#get-the-project)\r - [Project Dependencies](#project-dependencies)\r - [Project Scripts](#project-scripts)\r - [Environment Variables](#environment-variables)\r - [Authors ](#authors )\r - [License](#license)",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "S.U."
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/auth/register": {
+			"post": {
+				"operationId": "RegisterUser",
+				"responses": {
+					"200": {
+						"description": "Message informing if create was correct",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to create new user in database",
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"firstname": {
+										"type": "string",
+										"description": "new user name (required)"
+									},
+									"lastname": {
+										"type": "string",
+										"description": "new user's last name (required)"
+									},
+									"email": {
+										"type": "string",
+										"description": "new user email (required)"
+									},
+									"password": {
+										"type": "string",
+										"description": "new user password (required)"
+									}
+								},
+								"required": [
+									"firstname",
+									"lastname",
+									"email",
+									"password"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "LoginUser",
+				"responses": {
+					"200": {
+						"description": "Message with jwt access token and jwt refresh token",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to auth with login a user in database",
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"email": {
+										"type": "string",
+										"description": "email of the user to log in (required)"
+									},
+									"password": {
+										"type": "string",
+										"description": "password of the user to log in (required)"
+									}
+								},
+								"required": [
+									"email",
+									"password"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/refresh": {
+			"post": {
+				"operationId": "RefreshAccessToken",
+				"responses": {
+					"200": {
+						"description": "Message with a new jwt access token",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to refresh the token of a previously logged in user",
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Valid Refresh token",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "string",
+								"description": "Valid Refresh token"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/me": {
+			"get": {
+				"operationId": "GetMe",
+				"responses": {
+					"200": {
+						"description": "Data of the user making the request",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to obtain the data of the user making the request",
+				"tags": [
+					"UserController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/users": {
+			"get": {
+				"operationId": "GetUsers",
+				"responses": {
+					"200": {
+						"description": "Information of all users with or without filters",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to obtain the data of users from datatbase",
+				"tags": [
+					"UserController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "active users filter you want to get (true or false) (Optional)",
+						"in": "query",
+						"name": "active",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"200": {
+						"description": "Information of all users with or without filters",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to obtain the data of users from datatbase",
+				"tags": [
+					"UserController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/api"
+		}
+	]
+}
