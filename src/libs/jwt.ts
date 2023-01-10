@@ -7,10 +7,15 @@ dotenv.config();
 // Create Express APP
 const secretJWT: string = process.env.SECRETKEY || 'SECRETKEY';
 
+// Create Interface of tokens
+interface IPayloadToken {
+  type: string;
+  userId: string;
+}
 
 export function createAccessToken(userId: string) {
 
-  const payload = {
+  const payload: IPayloadToken = {
     type: "access",
     userId
   };
@@ -20,7 +25,7 @@ export function createAccessToken(userId: string) {
 
 export function createRefreshToken(userId: string) {
 
-  const payload = {
+  const payload: IPayloadToken = {
     type: "refresh",
     userId
   };
@@ -29,5 +34,5 @@ export function createRefreshToken(userId: string) {
 }
 
 export function decodedToken(token: string) {
-  return jwt.verify(token, secretJWT, { ignoreExpiration: false })
+  return jwt.verify(token, secretJWT, { ignoreExpiration: false }) as IPayloadToken
 }

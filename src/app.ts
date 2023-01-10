@@ -2,7 +2,9 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv';
-import router from './router'; // Import Routes
+import router from './routes/router';
+import { notFound } from './middlewares/notFound.middleware';
+import { handleErrors } from './middlewares/handleErrors.middleware';
  
 
 // Configuration Enviroment Variables
@@ -41,6 +43,8 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(undefined, {
 
 // Configure routings
 app.use('/api', router);
+app.use(notFound);
+app.use(handleErrors);
 
 
 export default app;

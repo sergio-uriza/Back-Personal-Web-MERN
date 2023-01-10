@@ -1,15 +1,12 @@
 import bcrypt from 'bcryptjs';
-import { Controller, Route, Tags, Get, Security, Request, Query, Post, BodyProp } from 'tsoa';
-import { userEntity } from '../models/entities/user.entity';
-import { UserRole } from '../utils/userRole.enum';
-import { IUser } from './interface/IUser.interface';
-
-
-const userModel = userEntity(); // Users Collection
+import { Route, Tags, Get, Security, Request, Query, Post, BodyProp } from 'tsoa';
+import { UserRole } from '../enums/userRole.enum';
+import User from '../models/user.model'
+import { TUserCreate } from './types/index';
 
 @Route("/users")
 @Tags("UserController")
-export class UserController extends Controller {
+export class UserController {
 
   /**
    * Endpoint to obtain the data of the user making the request
@@ -18,9 +15,9 @@ export class UserController extends Controller {
    */
   @Security("bearerAuth")
   @Get("/me")
-  public async getMe(@Request() userId: string): Promise<any> {
+  public async getMe(@Request() userId: string) {
     try {
-      return await userModel.findById(userId)
+      return await User.findById(userId)
         .select({_id: 0, firstname: 1, lastname: 1, email: 1})
         .exec();
 
@@ -37,14 +34,14 @@ export class UserController extends Controller {
    */
   @Security("bearerAuth")
   @Get("/")
-  public async getUsers(@Query() active?: boolean): Promise<any> {
+  public async getUsers(@Query() active?: boolean) {
     try {
       if ( active === undefined ) {
-        return await userModel.find()
+        return await User.find()
           .select({ firstname: 1, lastname: 1, email: 1, role: 1, active: 1, avatar: 1 })
           .exec();
       } else {
-        return await userModel.find({ active })
+        return await User.find({ active })
           .select({ firstname: 1, lastname: 1, email: 1, role: 1, active: 1, avatar: 1 })
           .exec();
       }
@@ -62,12 +59,12 @@ export class UserController extends Controller {
    */
   @Security("bearerAuth")
   @Post("/")
-  public async createUser(@BodyProp() firstname: string, @BodyProp() lastname: string, @BodyProp() email: string, @BodyProp() password: string, @BodyProp() role: UserRole, @Request() avatar?: string): Promise<any> {
+  public async createUser(@BodyProp() firstname: string, @BodyProp() lastname: string, @BodyProp() email: string, @BodyProp() password: string, @BodyProp() role: UserRole, @Request() avatar?: string) {
     try {
       const salt = bcrypt.genSaltSync(10);
       const hashPassword = bcrypt.hashSync(password, salt);
       const ImagePath = avatar ? avatar : '';
-      const user: IUser = {
+      const user: TUserCreate = {
         firstname,
         lastname,
         email: email.toLowerCase(),
@@ -77,8 +74,8 @@ export class UserController extends Controller {
         avatar: ImagePath
       };
       
-      await userModel.create(user);
-      return { msg: 'User create successfully' }
+      await User.create(user);
+      return { message: 'User create successfully' }
 
     } catch (err) {
       console.log(`[ORM ERROR]: Create user: ${err}`);
