@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { fcLoginUser, fcRefreshAccessToken, fcRegisterUser } from './auth.route';
-import upload from '../libs/multer';
-import { fcCreateUser, fcGetMe, fcGetUsers } from './users.route';
+import { uploadAvatar } from '../middlewares/upload.middleware';
+import { fcCreateUser, fcDeleteUser, fcGetMe, fcGetUsers, fcUpdateUser } from './users.route';
 import { authValidator } from '../middlewares/authentication.middleware';
 import { schemaValidator } from '../middlewares/schemaValidator.middleware';
 import { RegisterAuthSchema, LoginAuthSchema, RefreshAuthSchema } from '../schemas/auth.schema';
-import { GetUsersSchema } from '../schemas/users.schema';
+import { CreateUsersSchema, DeleteUsersSchema, GetUsersSchema, UpdateUsersSchema } from '../schemas/users.schema';
 
 
 const router = Router();
@@ -34,6 +34,11 @@ router.route('/users/me')
 // http://localhost:3977/api/users/
 router.route('/users/')
   .get([authValidator, schemaValidator(GetUsersSchema)], fcGetUsers)
-  .post([authValidator, upload.single('avatar')], fcCreateUser);
+  .post([authValidator, uploadAvatar, schemaValidator(CreateUsersSchema)], fcCreateUser)
+
+// http://localhost:3977/api/users/:id
+router.route('/users/:id')
+  .patch([authValidator, uploadAvatar, schemaValidator(UpdateUsersSchema)], fcUpdateUser)
+  .delete([authValidator, schemaValidator(DeleteUsersSchema)], fcDeleteUser)
 
 export default router;

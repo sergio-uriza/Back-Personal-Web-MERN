@@ -5,7 +5,25 @@
 		"parameters": {},
 		"requestBodies": {},
 		"responses": {},
-		"schemas": {},
+		"schemas": {
+			"FlattenMaps_T_": {
+				"properties": {},
+				"type": "object"
+			},
+			"IUser": {
+				"$ref": "#/components/schemas/FlattenMaps_T_"
+			},
+			"ObjectId": {
+				"type": "string"
+			},
+			"UserRole": {
+				"enum": [
+					"admin",
+					"user"
+				],
+				"type": "string"
+			}
+		},
 		"securitySchemes": {
 			"bearerAuth": {
 				"type": "http",
@@ -35,7 +53,17 @@
 						"description": "Message informing if create was correct",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
@@ -90,7 +118,17 @@
 						"description": "Message with jwt access token and jwt refresh token",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"refreshToken": {},
+										"accessToken": {}
+									},
+									"required": [
+										"refreshToken",
+										"accessToken"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
@@ -135,7 +173,15 @@
 						"description": "Message with a new jwt access token",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"accessToken": {}
+									},
+									"required": [
+										"accessToken"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
@@ -168,7 +214,24 @@
 						"description": "Data of the user making the request",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IUser"
+										},
+										{
+											"properties": {
+												"_id": {
+													"$ref": "#/components/schemas/ObjectId"
+												}
+											},
+											"required": [
+												"_id"
+											],
+											"type": "object"
+										}
+									]
+								}
 							}
 						}
 					}
@@ -193,7 +256,27 @@
 						"description": "Information of all users with or without filters",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"items": {
+										"allOf": [
+											{
+												"$ref": "#/components/schemas/IUser"
+											},
+											{
+												"properties": {
+													"_id": {
+														"$ref": "#/components/schemas/ObjectId"
+													}
+												},
+												"required": [
+													"_id"
+												],
+												"type": "object"
+											}
+										]
+									},
+									"type": "array"
+								}
 							}
 						}
 					}
@@ -223,15 +306,25 @@
 				"operationId": "CreateUser",
 				"responses": {
 					"200": {
-						"description": "Information of all users with or without filters",
+						"description": "Message informing if create was correct",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
 							}
 						}
 					}
 				},
-				"description": "Endpoint to obtain the data of users from datatbase",
+				"description": "Endpoint to create users in datatbase",
 				"tags": [
 					"UserController"
 				],
@@ -240,7 +333,127 @@
 						"bearerAuth": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"firstname": {
+										"type": "string",
+										"description": "new user name (required)"
+									},
+									"lastname": {
+										"type": "string",
+										"description": "new user's last name (required)"
+									},
+									"email": {
+										"type": "string",
+										"description": "new user email (required)"
+									},
+									"password": {
+										"type": "string",
+										"description": "new user password (required)"
+									},
+									"role": {
+										"$ref": "#/components/schemas/UserRole",
+										"description": "new user role (required)"
+									}
+								},
+								"required": [
+									"firstname",
+									"lastname",
+									"email",
+									"password",
+									"role"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{id}": {
+			"patch": {
+				"operationId": "UpdateUser",
+				"responses": {
+					"200": {
+						"description": "Message informing if update was correct",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to partially update user information from the database",
+				"tags": [
+					"UserController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "identifier of the user to modify (required)",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"firstname": {
+										"type": "string",
+										"description": "new firstname for user (optional)"
+									},
+									"lastname": {
+										"type": "string",
+										"description": "new lastname for user (optional)"
+									},
+									"email": {
+										"type": "string",
+										"description": "new email for user (optional)"
+									},
+									"password": {
+										"type": "string",
+										"description": "new password for user (optional)"
+									},
+									"role": {
+										"$ref": "#/components/schemas/UserRole",
+										"description": "new role for user (optional)"
+									},
+									"active": {
+										"type": "boolean",
+										"description": "new state of active for user (optional)"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

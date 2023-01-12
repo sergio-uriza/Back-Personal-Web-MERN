@@ -24,20 +24,19 @@ app.get('/', (req: Request, res: Response) => {
 
 // Configure Body Parse
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.json({ limit: '50mb' }));
+app.use(express.json({ limit: '20mb' }));
 
 // Configure Header HTTP - Cors
 app.use(cors());
 
 // Configure static folder
-app.use(express.static('uploads'));
-app.use(express.static('public'));
+app.use('/public', express.static('public'));
 
 // Swagger config and route
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(undefined, {
   swaggerOptions: {
-      url: "/swagger.json",
-      explorer: true
+    url: "/public/swagger.json",
+    explorer: true
   }
 }));
 

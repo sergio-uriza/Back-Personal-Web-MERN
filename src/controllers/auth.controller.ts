@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import { compareWithHash, hashString } from '../libs/bcrypt';
 import { Route, Tags, Post, BodyProp, Body } from 'tsoa';
 import { UserRole } from '../enums/userRole.enum';
 import { createAccessToken, createRefreshToken, decodedToken } from '../libs/jwt';
@@ -21,16 +21,14 @@ export class AuthController {
   @Post("/register")
   public async registerUser(@BodyProp() firstname: string, @BodyProp() lastname: string, @BodyProp() email:string, @BodyProp() password:string) {
     try {
-      const salt = await bcrypt.genSalt(10);
-      const hashPassword = await bcrypt.hash(password, salt);
+      const hashPassword = await hashString(password);
       const user: TUserCreate = {
         firstname,
         lastname,
         email: email.toLowerCase(),
         password: hashPassword,
         role: UserRole.USER,
-        active: false,
-        avatar: ''
+        active: false
       };
       
       await User.create(user);
@@ -56,7 +54,7 @@ export class AuthController {
       const userFound = await User.findOne({ email: emailLowerCase }).exec();
       if (!userFound) throw new AppError(500, 'Server Login Error');
 
-      const isValidPassword = await bcrypt.compare(password, userFound.password);
+      const isValidPassword = await compareWithHash(password, userFound.password);
       if (!isValidPassword) throw new AppError(500, 'Server Login Error');
       if (!userFound.active) throw new AppError(401, 'Unauthorized User Error');
 

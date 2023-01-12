@@ -7,7 +7,7 @@ export interface IUser extends Document {
   lastname: string,
   email: string,
   password: string,
-  role: string,
+  role: UserRole,
   active: boolean,
   avatar?: string,
 }
@@ -26,4 +26,3 @@ const userSchema = new Schema<IUser>(
 userSchema.plugin(uniqueValidator)
 
 export default model<IUser>('User', userSchema);
-

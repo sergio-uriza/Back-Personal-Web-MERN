@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserController } from '../controllers/users.controller';
-import { GetBodyUsersType } from '../schemas/users.schema';
+import { DeleteParamsUsersType, CreateBodyUsersType, GetBodyUsersType, UpdateBodyUsersType, UpdateParamsUsersType } from '../schemas/users.schema';
 import { literalToBoolean } from '../enums/literalsBoolean.enum';
 
 
@@ -34,17 +34,39 @@ export async function fcGetUsers(req: Request, res: Response, next: NextFunction
 
 export async function fcCreateUser(req: Request, res: Response, next: NextFunction) {
 
-  const { firstname, lastname, email, password, role } = req.body
+  const { firstname, lastname, email, password, role } = req.body as CreateBodyUsersType
   const avatar = req.file?.path
-  console.log("EL BODY", req.body)
-  console.log("EL FILE", req.file)
-
-  if( !firstname || !lastname || !email || !password || !role  ) return res.status(400).send({ msg: 'ERROR: Missing data' });
-
   try {
     const response = await controller.createUser(firstname, lastname, email, password, role, avatar);
-    return res.status(200).send(response);
+    return res.status(201).send(response);
   
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function fcUpdateUser(req: Request, res: Response, next: NextFunction) {
+
+  const { id } = req.params as UpdateParamsUsersType
+  const { firstname, lastname, email, password, role, active } = req.body as UpdateBodyUsersType
+  const avatar = req.file?.path
+  const activeBool = literalToBoolean(active)
+  try {
+    const response = await controller.updateUser(id, firstname, lastname, email, password, role, activeBool, avatar);
+    return res.status(201).send(response);
+
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function fcDeleteUser(req: Request, res: Response, next: NextFunction) {
+
+  const { id } = req.params as DeleteParamsUsersType
+  try {
+    const response = await controller.deleteUser(id);
+    return res.status(200).send(response);
+
   } catch (err) {
     next(err);
   }
