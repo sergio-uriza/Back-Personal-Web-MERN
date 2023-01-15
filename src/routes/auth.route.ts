@@ -1,44 +1,38 @@
-import { NextFunction, Request, Response } from 'express';
-import { AuthController } from '../controllers/auth.controller';
-import { LoginBodyAuthType, RefreshBodyAuthType, RegisterBodyAuthType } from '../schemas/auth.schema';
+import { NextFunction, Request, Response } from 'express'
+import { AuthController } from '../controllers/auth.controller'
+import { LoginBodyAuthType, RefreshBodyAuthType, RegisterBodyAuthType } from '../schemas/auth.schema'
 
+const controller: AuthController = new AuthController()
 
-const controller: AuthController = new AuthController;
-
-export async function fcRegisterUser(req: Request, res: Response, next: NextFunction) {
-
-  const { firstname, lastname, email, password } = req.body as RegisterBodyAuthType;
+export const fcRegisterUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const body = req.body as RegisterBodyAuthType
   try {
-    const response = await controller.registerUser(firstname, lastname, email, password);
-    return res.status(201).send(response);
-  
+    const response = await controller.registerUser(body)
+    res.status(201).send(response)
   } catch (err) {
-    next(err);
+    console.log(`[ODM ERROR]: Register user: ${err}`)
+    next(err)
   }
 }
 
-
-export async function fcLoginUser(req: Request, res: Response, next: NextFunction) {
-
-  const { email, password } = req.body as LoginBodyAuthType;
+export const fcLoginUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const body = req.body as LoginBodyAuthType
   try {
-    const response = await controller.loginUser(email, password);
-    return res.status(200).send(response);
-  
+    const response = await controller.loginUser(body)
+    res.status(200).send(response)
   } catch (err) {
-    next(err);
+    console.log(`[ODM ERROR]: Login user: ${err}`)
+    next(err)
   }
 }
 
-
-export async function fcRefreshAccessToken(req: Request, res: Response, next: NextFunction) {
-
+export const fcRefreshAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { refreshToken } = req.body as RefreshBodyAuthType
   try {
-    const response = await controller.refreshAccessToken(refreshToken);
-    return res.status(200).send(response);
-    
+    const response = await controller.refreshAccessToken(refreshToken)
+    res.status(200).send(response)
   } catch (err) {
-    next(err);
+    console.log(`[ODM ERROR]: Refresh access token: ${err}`)
+    next(err)
   }
 }

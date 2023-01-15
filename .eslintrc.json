@@ -3,27 +3,22 @@
         "es2021": true,
         "node": true
     },
-    "extends": [
-        // "standard-with-typescript",
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
-        // "plugin:@typescript-eslint/recommended-requiring-type-checking"
-    ],
+    "extends": "standard-with-typescript",
     "overrides": [
     ],
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint"
-    ],
     "parserOptions": {
+        "project": ["./tsconfig.json"],
         "ecmaVersion": "latest",
-        "sourceType": "module",
-        "project": ["./tsconfig.json"]
+        "sourceType": "module"
     },
     "ignorePatterns": [
-        "**/node_modules/**"
+        "**/node_modules/**",
+        "build/**/*.js",
+        "build/**/*.js.map"
     ],
     "rules": {
-    },
-    "root": true
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/restrict-template-expressions": "off"
+    }
 }

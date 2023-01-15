@@ -1,73 +1,69 @@
-import { NextFunction, Request, Response } from 'express';
-import { UserController } from '../controllers/users.controller';
-import { DeleteParamsUsersType, CreateBodyUsersType, GetBodyUsersType, UpdateBodyUsersType, UpdateParamsUsersType } from '../schemas/users.schema';
-import { literalToBoolean } from '../enums/literalsBoolean.enum';
+import { NextFunction, Request, Response } from 'express'
+import { UserController } from '../controllers/users.controller'
+import { DeleteParamsUsersType, CreateBodyUsersType, GetBodyUsersType, UpdateBodyUsersType, UpdateParamsUsersType } from '../schemas/users.schema'
+import { literalToBoolean } from '../enums/literalsBoolean.enum'
 
+const controller: UserController = new UserController()
 
-const controller: UserController = new UserController;
-
-export async function fcGetMe(req: Request, res: Response, next: NextFunction) {
-
+export const fcGetMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const userId = req.user
-  if( !userId ) return res.status(400).send({ msg: 'ERROR: Invalid Access Token' });
+  if (userId == null) {
+    res.status(400).send({ msg: 'ERROR: Invalid Access Token' })
+    return
+  }
   try {
-    const response = await controller.getMe(userId);
-    res.status(200).send(response);
-  
+    const response = await controller.getMe(userId)
+    res.status(200).send(response)
   } catch (err) {
-    next(err);
+    console.log(`[ODM ERROR]: Get me: ${err}`)
+    next(err)
   }
 }
 
-export async function fcGetUsers(req: Request, res: Response, next: NextFunction) {
-
+export const fcGetUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { active } = req.query as GetBodyUsersType
   const activeBool = literalToBoolean(active)
   try {
-    const response = await controller.getUsers(activeBool);
-    res.status(200).send(response);
-  
+    const response = await controller.getUsers(activeBool)
+    res.status(200).send(response)
   } catch (err) {
-    next(err);
+    console.log(`[ODM ERROR]: Get all users: ${err}`)
+    next(err)
   }
 }
 
-export async function fcCreateUser(req: Request, res: Response, next: NextFunction) {
-
-  const { firstname, lastname, email, password, role } = req.body as CreateBodyUsersType
+export const fcCreateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const body = req.body as CreateBodyUsersType
   const avatar = req.file?.path
   try {
-    const response = await controller.createUser(firstname, lastname, email, password, role, avatar);
-    return res.status(201).send(response);
-  
+    const response = await controller.createUser(body, avatar)
+    res.status(201).send(response)
   } catch (err) {
-    next(err);
+    console.log(`[ODM ERROR]: Create user: ${err}`)
+    next(err)
   }
 }
 
-export async function fcUpdateUser(req: Request, res: Response, next: NextFunction) {
-
+export const fcUpdateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params as UpdateParamsUsersType
-  const { firstname, lastname, email, password, role, active } = req.body as UpdateBodyUsersType
+  const body = req.body as UpdateBodyUsersType
   const avatar = req.file?.path
-  const activeBool = literalToBoolean(active)
   try {
-    const response = await controller.updateUser(id, firstname, lastname, email, password, role, activeBool, avatar);
-    return res.status(201).send(response);
-
+    const response = await controller.updateUser(id, body, avatar)
+    res.status(201).send(response)
   } catch (err) {
-    next(err);
+    console.log(`[ODM ERROR]: Partial update user: ${err}`)
+    next(err)
   }
 }
 
-export async function fcDeleteUser(req: Request, res: Response, next: NextFunction) {
-
+export const fcDeleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params as DeleteParamsUsersType
   try {
-    const response = await controller.deleteUser(id);
-    return res.status(200).send(response);
-
+    const response = await controller.deleteUser(id)
+    res.status(200).send(response)
   } catch (err) {
-    next(err);
+    console.log(`[ODM ERROR]: Partial update user: ${err}`)
+    next(err)
   }
 }

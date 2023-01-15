@@ -6,15 +6,72 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"FlattenMaps_T_": {
-				"properties": {},
+			"RegisterBodyAuthType": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"lastname": {
+						"type": "string"
+					},
+					"firstname": {
+						"type": "string"
+					}
+				},
 				"type": "object"
 			},
-			"IUser": {
-				"$ref": "#/components/schemas/FlattenMaps_T_"
+			"LoginBodyAuthType": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					}
+				},
+				"type": "object"
 			},
 			"ObjectId": {
 				"type": "string"
+			},
+			"CreateBodyMenuType": {
+				"properties": {
+					"order": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"active": {
+						"type": "boolean"
+					},
+					"path": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"UpdateBodyMenuType": {
+				"properties": {
+					"order": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"active": {
+						"type": "boolean"
+					},
+					"path": {
+						"type": "string"
+					}
+				},
+				"type": "object"
 			},
 			"UserRole": {
 				"enum": [
@@ -22,6 +79,56 @@
 					"user"
 				],
 				"type": "string"
+			},
+			"CreateBodyUsersType": {
+				"properties": {
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"lastname": {
+						"type": "string"
+					},
+					"firstname": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"LiteralsBoolean": {
+				"enum": [
+					"true",
+					"false"
+				],
+				"type": "string"
+			},
+			"UpdateBodyUsersType": {
+				"properties": {
+					"active": {
+						"$ref": "#/components/schemas/LiteralsBoolean"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"lastname": {
+						"type": "string"
+					},
+					"firstname": {
+						"type": "string"
+					}
+				},
+				"type": "object"
 			}
 		},
 		"securitySchemes": {
@@ -75,35 +182,13 @@
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "new user parameters (required)",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"firstname": {
-										"type": "string",
-										"description": "new user name (required)"
-									},
-									"lastname": {
-										"type": "string",
-										"description": "new user's last name (required)"
-									},
-									"email": {
-										"type": "string",
-										"description": "new user email (required)"
-									},
-									"password": {
-										"type": "string",
-										"description": "new user password (required)"
-									}
-								},
-								"required": [
-									"firstname",
-									"lastname",
-									"email",
-									"password"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/RegisterBodyAuthType",
+								"description": "new user parameters (required)"
 							}
 						}
 					}
@@ -140,25 +225,13 @@
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "credentials of the user to log in (required)",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"email": {
-										"type": "string",
-										"description": "email of the user to log in (required)"
-									},
-									"password": {
-										"type": "string",
-										"description": "password of the user to log in (required)"
-									}
-								},
-								"required": [
-									"email",
-									"password"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/LoginBodyAuthType",
+								"description": "credentials of the user to log in (required)"
 							}
 						}
 					}
@@ -204,6 +277,209 @@
 						}
 					}
 				}
+			}
+		},
+		"/menu": {
+			"get": {
+				"operationId": "GetMenu",
+				"responses": {
+					"200": {
+						"description": "Information of all menus with or without filters",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"allOf": [
+											{
+												"$ref": "#/components/schemas/IMenu"
+											},
+											{
+												"properties": {
+													"_id": {
+														"$ref": "#/components/schemas/ObjectId"
+													}
+												},
+												"required": [
+													"_id"
+												],
+												"type": "object"
+											}
+										]
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to obtain the data of menus from database",
+				"tags": [
+					"MenuController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "active menus filter you want to get (true or false) (Optional)",
+						"in": "query",
+						"name": "active",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateMenu",
+				"responses": {
+					"200": {
+						"description": "Data of the new menu",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IMenu"
+										},
+										{
+											"properties": {
+												"_id": {
+													"$ref": "#/components/schemas/ObjectId"
+												}
+											},
+											"required": [
+												"_id"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to create menu from database",
+				"tags": [
+					"MenuController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "parameter to new menu (required)",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateBodyMenuType",
+								"description": "parameter to new menu (required)"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/menu/{id}": {
+			"patch": {
+				"operationId": "UpdateMenu",
+				"responses": {
+					"200": {
+						"description": "Message informing if update was correct",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to partially update menu information from the database",
+				"tags": [
+					"MenuController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "identifier of the menu to modify (required)",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "parameters of the menu to modify (Optional)",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateBodyMenuType",
+								"description": "parameters of the menu to modify (Optional)"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteMenu",
+				"responses": {
+					"200": {
+						"description": "Message informing if delete was correct",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to delete menu information from the database",
+				"tags": [
+					"MenuController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "identifier of the menu to delete (required)",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/users/me": {
@@ -281,7 +557,7 @@
 						}
 					}
 				},
-				"description": "Endpoint to obtain the data of users from datatbase",
+				"description": "Endpoint to obtain the data of users from database",
 				"tags": [
 					"UserController"
 				],
@@ -335,40 +611,13 @@
 				],
 				"parameters": [],
 				"requestBody": {
+					"description": "new user parameters (required)",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"firstname": {
-										"type": "string",
-										"description": "new user name (required)"
-									},
-									"lastname": {
-										"type": "string",
-										"description": "new user's last name (required)"
-									},
-									"email": {
-										"type": "string",
-										"description": "new user email (required)"
-									},
-									"password": {
-										"type": "string",
-										"description": "new user password (required)"
-									},
-									"role": {
-										"$ref": "#/components/schemas/UserRole",
-										"description": "new user role (required)"
-									}
-								},
-								"required": [
-									"firstname",
-									"lastname",
-									"email",
-									"password",
-									"role"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/CreateBodyUsersType",
+								"description": "new user parameters (required)"
 							}
 						}
 					}
@@ -419,41 +668,60 @@
 					}
 				],
 				"requestBody": {
+					"description": "parameters of the user to modify (optional)",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"firstname": {
-										"type": "string",
-										"description": "new firstname for user (optional)"
-									},
-									"lastname": {
-										"type": "string",
-										"description": "new lastname for user (optional)"
-									},
-									"email": {
-										"type": "string",
-										"description": "new email for user (optional)"
-									},
-									"password": {
-										"type": "string",
-										"description": "new password for user (optional)"
-									},
-									"role": {
-										"$ref": "#/components/schemas/UserRole",
-										"description": "new role for user (optional)"
-									},
-									"active": {
-										"type": "boolean",
-										"description": "new state of active for user (optional)"
-									}
-								},
-								"type": "object"
+								"$ref": "#/components/schemas/UpdateBodyUsersType",
+								"description": "parameters of the user to modify (optional)"
 							}
 						}
 					}
 				}
+			},
+			"delete": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "Message informing if delete was correct",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to delete a user from the database",
+				"tags": [
+					"UserController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "identifier of the user to delete (required)",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},

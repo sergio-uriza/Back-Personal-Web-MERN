@@ -1,38 +1,37 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+import { TokenType } from '../enums/tokenType.enum'
 
 // Configuration the .env file
-dotenv.config();
+dotenv.config()
 
 // Create Express APP
-const secretJWT: string = process.env.SECRETKEY || 'SECRETKEY';
+const secretJWT: string = process.env.SECRETKEY ?? 'SECRETKEY'
 
 // Create Interface of tokens
-interface IPayloadToken {
-  type: string;
-  userId: string;
+interface IPayloadToken extends jwt.JwtPayload {
+  type?: TokenType
+  userId?: string
 }
 
-export function createAccessToken(userId: string) {
-
+export const createAccessToken = (userId: string): string => {
   const payload: IPayloadToken = {
-    type: "access",
+    type: TokenType.ACCESS,
     userId
-  };
+  }
 
-  return jwt.sign(payload, secretJWT, { expiresIn: "1h" })
+  return jwt.sign(payload, secretJWT, { expiresIn: '1h' })
 }
 
-export function createRefreshToken(userId: string) {
-
+export const createRefreshToken = (userId: string): string => {
   const payload: IPayloadToken = {
-    type: "refresh",
+    type: TokenType.REFRESH,
     userId
-  };
+  }
 
-  return jwt.sign(payload, secretJWT, { expiresIn: "8h" })
+  return jwt.sign(payload, secretJWT, { expiresIn: '8h' })
 }
 
-export function decodedToken(token: string) {
-  return jwt.verify(token, secretJWT, { ignoreExpiration: false }) as IPayloadToken
+export const decodedToken = (token: string): string | IPayloadToken => {
+  return jwt.verify(token, secretJWT, { ignoreExpiration: false }) as string | IPayloadToken
 }
