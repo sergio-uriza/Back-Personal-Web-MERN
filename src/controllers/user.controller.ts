@@ -2,10 +2,10 @@ import { Route, Tags, Get, Security, Request, Query, Post, Patch, Delete, Path, 
 import { literalToBoolean } from '../enums/literalsBoolean.enum'
 import { hashString } from '../libs/bcrypt'
 import User from '../models/user.model'
-import { CreateBodyUsersType, UpdateBodyUsersType } from '../schemas/users.schema'
-import { TUserCreate, TUserUpdate } from './types/index'
+import { CreateBodyUserType, UpdateBodyUserType } from '../schemas/user.schema'
+import { ObjUserType } from './types/index'
 
-@Route('/users')
+@Route('/user')
 @Tags('UserController')
 export class UserController {
   /**
@@ -16,27 +16,34 @@ export class UserController {
   @Security('bearerAuth')
   @Get('/me')
   public async getMe (@Request() userId: string) {
-    return await User.findById(userId)
+    const me: ObjUserType | null = await User.findById(userId)
       .select({ _id: 0, firstname: 1, lastname: 1, email: 1 })
+      .lean()
       .exec()
+
+    return me
   }
 
   /**
    * Endpoint to obtain the data of users from database
    * @param active active users filter you want to get (true or false) (Optional)
-   * @returns Information of all users with or without filters
+   * @returns Data of all users with or without filters
    */
   @Security('bearerAuth')
   @Get('/')
   public async getUsers (@Query() active?: boolean) {
     if (active === undefined) {
-      return await User.find()
+      const allUser: ObjUserType[] = await User.find()
         .select({ firstname: 1, lastname: 1, email: 1, role: 1, active: 1, avatar: 1 })
+        .lean()
         .exec()
+      return allUser
     } else {
-      return await User.find({ active })
+      const activeUser: ObjUserType[] = await User.find({ active })
         .select({ firstname: 1, lastname: 1, email: 1, role: 1, active: 1, avatar: 1 })
+        .lean()
         .exec()
+      return activeUser
     }
   }
 
@@ -48,21 +55,17 @@ export class UserController {
    */
   @Security('bearerAuth')
   @Post('/')
-  public async createUser (@Body() body: CreateBodyUsersType, @Request() avatar?: string) {
-    const { firstname, lastname, email, password, role } = body
-
+  public async createUser (@Body() body: CreateBodyUserType, @Request() avatar?: string) {
+    const { password, email } = body
     const hashPassword = await hashString(password)
-    const user: TUserCreate = {
-      firstname,
-      lastname,
+    await User.create({
+      ...body,
       email: email.toLowerCase(),
       password: hashPassword,
-      role,
       active: false,
       avatar
-    }
+    })
 
-    await User.create(user)
     return { message: 'User create successfully' }
   }
 
@@ -75,21 +78,19 @@ export class UserController {
    */
   @Security('bearerAuth')
   @Patch('/:id')
-  public async updateUser (@Path() id: string, @Body() body: UpdateBodyUsersType, @Request() avatar?: string) {
-    const { firstname, lastname, email, password, role, active } = body
+  public async updateUser (@Path() id: string, @Body() body: UpdateBodyUserType, @Request() avatar?: string) {
+    const { email, password, active } = body
     const hashPassword = password === undefined ? password : await hashString(password)
 
-    const modifyUser: TUserUpdate = {
-      firstname,
-      lastname,
+    const modifyUser = {
+      ...body,
       email: email?.toLowerCase(),
       password: hashPassword,
-      role,
       active: literalToBoolean(active),
       avatar
     }
 
-    await User.findByIdAndUpdate(id, modifyUser, { runValidators: true })
+    await User.findByIdAndUpdate(id, modifyUser, { runValidators: true, new: true }).exec()
     return { message: 'User update successfully' }
   }
 
@@ -101,7 +102,7 @@ export class UserController {
   @Security('bearerAuth')
   @Delete('/:id')
   public async deleteUser (@Path() id: string) {
-    await User.findByIdAndDelete(id)
+    await User.findByIdAndDelete(id).exec()
     return { message: 'User delete successfully' }
   }
 }

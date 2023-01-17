@@ -1,8 +1,8 @@
-import { model, Schema, Document } from 'mongoose'
+import { model, Schema } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 import { UserRole } from '../enums/userRole.enum'
 
-export interface IUser extends Document {
+export interface IUser {
   firstname: string
   lastname: string
   email: string

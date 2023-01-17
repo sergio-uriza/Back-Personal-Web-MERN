@@ -5,11 +5,11 @@ import { CreateBodyMenuType, DeleteParamsMenuType, GetQueryMenuType, UpdateBodyM
 
 const controller: MenuController = new MenuController()
 
-export const fcGetMenu = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const fcGetMenus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { active } = req.query as GetQueryMenuType
   const activeBool = literalToBoolean(active)
   try {
-    const response = await controller.getMenu(activeBool)
+    const response = await controller.getMenus(activeBool)
     res.status(200).send(response)
   } catch (err) {
     console.log(`[ODM ERROR]: Get menu: ${err}`)

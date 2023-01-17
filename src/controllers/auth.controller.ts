@@ -4,7 +4,6 @@ import { UserRole } from '../enums/userRole.enum'
 import { createAccessToken, createRefreshToken, decodedToken } from '../libs/jwt'
 import User from '../models/user.model'
 import { AppError } from '../utils/appError.class'
-import { TUserCreate } from './types/index'
 import { LoginBodyAuthType, RegisterBodyAuthType } from '../schemas/auth.schema'
 import { TokenType } from '../enums/tokenType.enum'
 
@@ -18,18 +17,15 @@ export class AuthController {
    */
   @Post('/register')
   public async registerUser (@Body() body: RegisterBodyAuthType) {
-    const { firstname, lastname, email, password } = body
-    const hashPassword = await hashString(password)
-    const user: TUserCreate = {
-      firstname,
-      lastname,
-      email: email.toLowerCase(),
+    const hashPassword = await hashString(body.password)
+    await User.create({
+      ...body,
+      email: body.email.toLowerCase(),
       password: hashPassword,
       role: UserRole.USER,
       active: false
-    }
+    })
 
-    await User.create(user)
     return { message: 'User create successfully' }
   }
 
@@ -43,7 +39,7 @@ export class AuthController {
     const { email, password } = body
     const emailLowerCase = email.toLowerCase()
 
-    const userFound = await User.findOne({ email: emailLowerCase }).exec()
+    const userFound = await User.findOne({ email: emailLowerCase }).lean().exec()
     if (userFound == null) throw new AppError(500, 'Server Login Error')
 
     const isValidPassword = await compareWithHash(password, userFound.password)
@@ -51,8 +47,8 @@ export class AuthController {
     if (!userFound.active) throw new AppError(401, 'Unauthorized User Error')
 
     return {
-      accessToken: createAccessToken(userFound._id),
-      refreshToken: createRefreshToken(userFound._id)
+      accessToken: createAccessToken(userFound._id.toString()),
+      refreshToken: createRefreshToken(userFound._id.toString())
     }
   }
 
@@ -68,9 +64,9 @@ export class AuthController {
       throw new AppError(400, 'Invalid Token Error')
     }
 
-    const user = await User.findOne({ _id: payloadToken.userId }).exec()
+    const user = await User.findOne({ _id: payloadToken.userId }).lean().exec()
     if (user == null) throw new AppError(400, 'Invalid Token Error')
 
-    return { accessToken: createAccessToken(user._id) }
+    return { accessToken: createAccessToken(user._id.toString()) }
   }
 }

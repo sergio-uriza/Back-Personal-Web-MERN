@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { UserController } from '../controllers/users.controller'
-import { DeleteParamsUsersType, CreateBodyUsersType, GetBodyUsersType, UpdateBodyUsersType, UpdateParamsUsersType } from '../schemas/users.schema'
+import { UserController } from '../controllers/user.controller'
+import { DeleteParamsUserType, CreateBodyUserType, GetBodyUserType, UpdateBodyUserType, UpdateParamsUserType } from '../schemas/user.schema'
 import { literalToBoolean } from '../enums/literalsBoolean.enum'
 
 const controller: UserController = new UserController()
@@ -21,7 +21,7 @@ export const fcGetMe = async (req: Request, res: Response, next: NextFunction): 
 }
 
 export const fcGetUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const { active } = req.query as GetBodyUsersType
+  const { active } = req.query as GetBodyUserType
   const activeBool = literalToBoolean(active)
   try {
     const response = await controller.getUsers(activeBool)
@@ -33,7 +33,7 @@ export const fcGetUsers = async (req: Request, res: Response, next: NextFunction
 }
 
 export const fcCreateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const body = req.body as CreateBodyUsersType
+  const body = req.body as CreateBodyUserType
   const avatar = req.file?.path
   try {
     const response = await controller.createUser(body, avatar)
@@ -45,8 +45,8 @@ export const fcCreateUser = async (req: Request, res: Response, next: NextFuncti
 }
 
 export const fcUpdateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const { id } = req.params as UpdateParamsUsersType
-  const body = req.body as UpdateBodyUsersType
+  const { id } = req.params as UpdateParamsUserType
+  const body = req.body as UpdateBodyUserType
   const avatar = req.file?.path
   try {
     const response = await controller.updateUser(id, body, avatar)
@@ -58,7 +58,7 @@ export const fcUpdateUser = async (req: Request, res: Response, next: NextFuncti
 }
 
 export const fcDeleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const { id } = req.params as DeleteParamsUsersType
+  const { id } = req.params as DeleteParamsUserType
   try {
     const response = await controller.deleteUser(id)
     res.status(200).send(response)

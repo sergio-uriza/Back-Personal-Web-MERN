@@ -1,5 +1,8 @@
 import { IUser } from '../../models/user.model'
+import { IMenu } from '../../models/menu.model'
+import { ICourse } from '../../models/course.model'
+import { Types } from 'mongoose'
 
-export type TUserCreate = Pick<IUser, 'firstname' | 'lastname' | 'email' | 'password' | 'role' | 'active' | 'avatar'>
-export type TUserUpdate = Partial<TUserCreate>
-export type TUserSearch = Pick<IUser, '_id' | 'firstname' | 'lastname' | 'email' | 'password' | 'role' | 'active' | 'avatar'>
+export type ObjUserType = Partial<IUser> & Partial<{ _id: Types.ObjectId }>
+export type ObjMenuType = Partial<IMenu> & Partial<{ _id: Types.ObjectId }>
+export type ObjCourseType = Partial<ICourse> & Partial<{ _id: Types.ObjectId }>

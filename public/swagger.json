@@ -34,8 +34,126 @@
 				},
 				"type": "object"
 			},
-			"ObjectId": {
+			"Partial_ICourse_": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"score": {
+						"type": "number",
+						"format": "double"
+					},
+					"miniature": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"Types.ObjectId": {
 				"type": "string"
+			},
+			"Partial___id-Types.ObjectId__": {
+				"properties": {
+					"_id": {
+						"$ref": "#/components/schemas/Types.ObjectId"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"ObjCourseType": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Partial_ICourse_"
+					},
+					{
+						"$ref": "#/components/schemas/Partial___id-Types.ObjectId__"
+					}
+				]
+			},
+			"CreateBodyCourseType": {
+				"properties": {
+					"score": {
+						"type": "number",
+						"format": "double"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"url": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"UpdateBodyCourseType": {
+				"properties": {
+					"score": {
+						"type": "number",
+						"format": "double"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"url": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"Partial_IMenu_": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"path": {
+						"type": "string"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					},
+					"active": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"ObjMenuType": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Partial_IMenu_"
+					},
+					{
+						"$ref": "#/components/schemas/Partial___id-Types.ObjectId__"
+					}
+				]
 			},
 			"CreateBodyMenuType": {
 				"properties": {
@@ -80,7 +198,44 @@
 				],
 				"type": "string"
 			},
-			"CreateBodyUsersType": {
+			"Partial_IUser_": {
+				"properties": {
+					"firstname": {
+						"type": "string"
+					},
+					"lastname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"active": {
+						"type": "boolean"
+					},
+					"avatar": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"ObjUserType": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Partial_IUser_"
+					},
+					{
+						"$ref": "#/components/schemas/Partial___id-Types.ObjectId__"
+					}
+				]
+			},
+			"CreateBodyUserType": {
 				"properties": {
 					"role": {
 						"$ref": "#/components/schemas/UserRole"
@@ -107,7 +262,7 @@
 				],
 				"type": "string"
 			},
-			"UpdateBodyUsersType": {
+			"UpdateBodyUserType": {
 				"properties": {
 					"active": {
 						"$ref": "#/components/schemas/LiteralsBoolean"
@@ -205,8 +360,12 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"refreshToken": {},
-										"accessToken": {}
+										"refreshToken": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										}
 									},
 									"required": [
 										"refreshToken",
@@ -248,7 +407,9 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"accessToken": {}
+										"accessToken": {
+											"type": "string"
+										}
 									},
 									"required": [
 										"accessToken"
@@ -279,9 +440,223 @@
 				}
 			}
 		},
+		"/course": {
+			"get": {
+				"operationId": "GetCourses",
+				"responses": {
+					"200": {
+						"description": "Course data according to the filters applied",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"pages": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"limit": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"docs": {
+											"items": {
+												"$ref": "#/components/schemas/ObjCourseType"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"pages",
+										"page",
+										"limit",
+										"total",
+										"docs"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to obtain the data of courses from database",
+				"tags": [
+					"CourseController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "maximum number of courses to retrieve per page (optional)",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "page number to return (optional)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateCourse",
+				"responses": {
+					"200": {
+						"description": "Data of the new course created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ObjCourseType"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to create courses in datatbase",
+				"tags": [
+					"CourseController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "new course parameters (required)",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateBodyCourseType",
+								"description": "new course parameters (required)"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/course/{id}": {
+			"patch": {
+				"operationId": "UpdateCourse",
+				"responses": {
+					"200": {
+						"description": "Message informing if update was correct",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to partially update course information from the database",
+				"tags": [
+					"CourseController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "identifier of the course to modify (required)",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "parameters of the course to modify (Optional)",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateBodyCourseType",
+								"description": "parameters of the course to modify (Optional)"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteCourse",
+				"responses": {
+					"200": {
+						"description": "Message informing if delete was correct",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint to delete course information from the database",
+				"tags": [
+					"CourseController"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "identifier of the course to delete (required)",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/menu": {
 			"get": {
-				"operationId": "GetMenu",
+				"operationId": "GetMenus",
 				"responses": {
 					"200": {
 						"description": "Information of all menus with or without filters",
@@ -289,22 +664,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"allOf": [
-											{
-												"$ref": "#/components/schemas/IMenu"
-											},
-											{
-												"properties": {
-													"_id": {
-														"$ref": "#/components/schemas/ObjectId"
-													}
-												},
-												"required": [
-													"_id"
-												],
-												"type": "object"
-											}
-										]
+										"$ref": "#/components/schemas/ObjMenuType"
 									},
 									"type": "array"
 								}
@@ -337,22 +697,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IMenu"
-										},
-										{
-											"properties": {
-												"_id": {
-													"$ref": "#/components/schemas/ObjectId"
-												}
-											},
-											"required": [
-												"_id"
-											],
-											"type": "object"
-										}
-									]
+									"$ref": "#/components/schemas/ObjMenuType"
 								}
 							}
 						}
@@ -482,7 +827,7 @@
 				]
 			}
 		},
-		"/users/me": {
+		"/user/me": {
 			"get": {
 				"operationId": "GetMe",
 				"responses": {
@@ -491,22 +836,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IUser"
-										},
-										{
-											"properties": {
-												"_id": {
-													"$ref": "#/components/schemas/ObjectId"
-												}
-											},
-											"required": [
-												"_id"
-											],
-											"type": "object"
-										}
-									]
+									"$ref": "#/components/schemas/ObjUserType"
 								}
 							}
 						}
@@ -524,32 +854,17 @@
 				"parameters": []
 			}
 		},
-		"/users": {
+		"/user": {
 			"get": {
 				"operationId": "GetUsers",
 				"responses": {
 					"200": {
-						"description": "Information of all users with or without filters",
+						"description": "Data of all users with or without filters",
 						"content": {
 							"application/json": {
 								"schema": {
 									"items": {
-										"allOf": [
-											{
-												"$ref": "#/components/schemas/IUser"
-											},
-											{
-												"properties": {
-													"_id": {
-														"$ref": "#/components/schemas/ObjectId"
-													}
-												},
-												"required": [
-													"_id"
-												],
-												"type": "object"
-											}
-										]
+										"$ref": "#/components/schemas/ObjUserType"
 									},
 									"type": "array"
 								}
@@ -616,7 +931,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateBodyUsersType",
+								"$ref": "#/components/schemas/CreateBodyUserType",
 								"description": "new user parameters (required)"
 							}
 						}
@@ -624,7 +939,7 @@
 				}
 			}
 		},
-		"/users/{id}": {
+		"/user/{id}": {
 			"patch": {
 				"operationId": "UpdateUser",
 				"responses": {
@@ -673,7 +988,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UpdateBodyUsersType",
+								"$ref": "#/components/schemas/UpdateBodyUserType",
 								"description": "parameters of the user to modify (optional)"
 							}
 						}

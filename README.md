@@ -74,7 +74,7 @@ git clone https://github.com/sergio266/Back-Personal-Web-MERN.git
 You must create an ***.env*** file in the root of the project with the following environment variables:
 - PORT: Indicating the port number to deploy the local server. For instance:
 ~~~
-    PORT = 3977
+    PORT = 8000
 ~~~
 
 

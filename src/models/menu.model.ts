@@ -1,7 +1,7 @@
-import { model, Schema, Document } from 'mongoose'
+import { model, Schema } from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 
-export interface IMenu extends Document {
+export interface IMenu {
   title: string
   path: string
   order: number

@@ -9,8 +9,8 @@ export const GetMenuSchema = z.object({
 
 export const CreateMenuSchema = z.object({
   body: z.object({
-    title: z.string().trim().min(1, 'Must have content').regex(/^[a-z0-9\-_\s]+$/i, 'Contains invalid characters'),
-    path: z.string().trim().min(1, 'Must have content').startsWith('/', 'Must start with: /').regex(/^\S+$/, 'Contains spaces').transform(val => val.toLowerCase()),
+    title: z.string().trim().min(1, 'Must have content').regex(/^[a-z0-9\u00C0-\u017F\-_\s]+$/i, 'Contains invalid characters'),
+    path: z.string().trim().min(1, 'Must have content').startsWith('/', 'Must start with: /').regex(/^\S+$/, 'Must not contain spaces').transform(val => val.toLowerCase()),
     order: z.number().int(),
     active: z.boolean()
   })
@@ -21,7 +21,7 @@ export const UpdateMenuSchema = z.object({
     id: z.string().length(24).regex(/^[a-z0-9]+$/i)
   }),
   body: z.object({
-    title: z.string().trim().min(1, 'Must have content').regex(/^[a-z0-9\-_\s]+$/i, 'Contains invalid characters').optional(),
+    title: z.string().trim().min(1, 'Must have content').regex(/^[a-z0-9\u00C0-\u017F\-_\s]+$/i, 'Contains invalid characters').optional(),
     path: z.string().trim().min(1, 'Must have content').startsWith('/', 'Must start with: /').regex(/^\S+$/, 'Contains spaces').transform(val => val.toLowerCase()).optional(),
     order: z.number().int().optional(),
     active: z.boolean().optional()
