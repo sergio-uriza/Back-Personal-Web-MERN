@@ -1,22 +1,27 @@
 {
-    "entryFile": "./index.ts",
-    "noImplicitAdditionalProperties": "throw-on-extras",
-    "controllerPathGlobs": ["src/**/*.controller.ts"],
-    "spec": {
-        "basePath": "/api",
-        "outputDirectory": "public",
-        "specVersion": 3,
-        "securityDefinitions": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        }
-    },
-    "routes": {
-        "basePath": "/api",
-        "routesDir": "src",
-        "authenticationModule": "./src/middlewares/authenticated.ts"
+  "entryFile": "./src/index.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/**/*.controller.ts"],
+  "spec": {
+    "basePath": "/api",
+    "outputDirectory": "public",
+    "specVersion": 3,
+    "securityDefinitions": {
+      "adminAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "userAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
+    }
+  },
+  "routes": {
+    "basePath": "/api",
+    "routesDir": "src",
+    "authenticationModule": "./src/middlewares/authenticated.ts"
+  }
 }

@@ -1,14 +1,15 @@
-import { compareWithHash, hashString } from '../libs/bcrypt'
+import User from '../models/user.model'
 import { Route, Tags, Post, Body } from 'tsoa'
 import { UserRole } from '../enums/userRole.enum'
-import { createAccessToken, createRefreshToken, decodedToken } from '../libs/jwt'
-import User from '../models/user.model'
 import { AppError } from '../utils/appError.class'
-import { LoginBodyAuthType, RegisterBodyAuthType } from '../schemas/auth.schema'
 import { TokenType } from '../enums/tokenType.enum'
+import { compareWithHash, hashString } from '../libs/bcrypt'
+import { createAccessToken, createRefreshToken, decodedRefToken } from '../libs/jwt'
+import { LoginBodyAuthType, RefreshBodyAuthType, RegisterBodyAuthType } from '../schemas/auth.schema'
+import { LoginUserType, MessageResType, ObjUserType, RefreshAccessTokenType } from './types'
 
 @Route('/auth')
-@Tags('AuthController')
+@Tags('Auth Endpoint')
 export class AuthController {
   /**
    * Endpoint to create new user in database
@@ -16,35 +17,49 @@ export class AuthController {
    * @returns Message informing if create was correct
    */
   @Post('/register')
-  public async registerUser (@Body() body: RegisterBodyAuthType) {
-    const hashPassword = await hashString(body.password)
-    await User.create({
+  public async registerUser (
+    @Body() body: RegisterBodyAuthType
+  ): Promise<MessageResType> {
+    const { email, password } = body
+    const duplicateEmail: ObjUserType | null = await User.findOne({ email: email.toLowerCase() })
+      .lean()
+      .exec()
+    if (duplicateEmail != null) throw new AppError(400, 'Email is already registered')
+
+    const hashPassword = await hashString(password)
+    const newUser = {
       ...body,
-      email: body.email.toLowerCase(),
+      email: email.toLowerCase(),
       password: hashPassword,
       role: UserRole.USER,
-      active: false
-    })
+      updatedAt: new Date(),
+      active: true
+    }
+    await User.create(newUser)
 
     return { message: 'User create successfully' }
   }
 
   /**
    * Endpoint to auth with login a user in database
-   * @param body credentials of the user to log in (required)
-   * @returns Message with jwt access token and jwt refresh token
+   * @param body credentials of the user to login (required)
+   * @returns Message with access token and refresh token
    */
   @Post('/login')
-  public async loginUser (@Body() body: LoginBodyAuthType) {
+  public async loginUser (
+    @Body() body: LoginBodyAuthType
+  ): Promise<LoginUserType> {
     const { email, password } = body
     const emailLowerCase = email.toLowerCase()
 
-    const userFound = await User.findOne({ email: emailLowerCase }).lean().exec()
-    if (userFound == null) throw new AppError(500, 'Server Login Error')
+    const userFound: ObjUserType | null = await User.findOne({ email: emailLowerCase })
+      .lean()
+      .exec()
+    if (userFound == null) throw new AppError(401, 'Server Login Error')
 
     const isValidPassword = await compareWithHash(password, userFound.password)
-    if (!isValidPassword) throw new AppError(500, 'Server Login Error')
-    if (!userFound.active) throw new AppError(401, 'Unauthorized User Error')
+    if (!isValidPassword) throw new AppError(401, 'Server Login Error')
+    if (!userFound.active) throw new AppError(403, 'Unauthorized User Error')
 
     return {
       accessToken: createAccessToken(userFound._id.toString()),
@@ -53,18 +68,56 @@ export class AuthController {
   }
 
   /**
-   * Endpoint to refresh the token of a previously logged in user
-   * @param refreshToken Valid Refresh token
-   * @returns Message with a new jwt access token
+   * Endpoint to auth with login an admin user in database
+   * @param body credentials of the admin user to login (required)
+   * @returns Message with access token and refresh token
+   */
+  @Post('/login_admin')
+  public async loginAdmin (
+    @Body() body: LoginBodyAuthType
+  ): Promise<LoginUserType> {
+    const { email, password } = body
+    const emailLowerCase = email.toLowerCase()
+
+    const userFound: ObjUserType | null = await User.findOne({ email: emailLowerCase })
+      .lean()
+      .exec()
+    if (userFound == null) throw new AppError(401, 'Server Login Error')
+
+    const isValidPassword = await compareWithHash(password, userFound.password)
+    if (!isValidPassword) throw new AppError(401, 'Server Login Error')
+    if (!userFound.active) throw new AppError(403, 'Unauthorized User Error')
+    if (userFound.role !== UserRole.ADMIN) throw new AppError(403, 'Unauthorized User Error')
+
+    return {
+      accessToken: createAccessToken(userFound._id.toString()),
+      refreshToken: createRefreshToken(userFound._id.toString())
+    }
+  }
+
+  /**
+   * Endpoint to refresh the token of a previously loggedin user
+   * @param body Valid Refresh token
+   * @returns Message with a new access token
    */
   @Post('/refresh')
-  public async refreshAccessToken (@Body() refreshToken: string) {
-    const payloadToken = decodedToken(refreshToken)
-    if (typeof payloadToken === 'string' || payloadToken.userId == null || payloadToken.type == null || payloadToken.type !== TokenType.REFRESH) {
+  public async refreshAccessToken (
+    @Body() body: RefreshBodyAuthType
+  ): Promise<RefreshAccessTokenType> {
+    const { refreshToken } = body
+    const payloadToken = decodedRefToken(refreshToken)
+    if (
+      typeof payloadToken === 'string' ||
+      payloadToken.userId == null ||
+      payloadToken.type == null ||
+      payloadToken.type !== TokenType.REFRESH
+    ) {
       throw new AppError(400, 'Invalid Token Error')
     }
 
-    const user = await User.findOne({ _id: payloadToken.userId }).lean().exec()
+    const user: ObjUserType | null = await User.findOne({ _id: payloadToken.userId })
+      .lean()
+      .exec()
     if (user == null) throw new AppError(400, 'Invalid Token Error')
 
     return { accessToken: createAccessToken(user._id.toString()) }

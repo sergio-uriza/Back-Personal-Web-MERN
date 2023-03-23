@@ -3,7 +3,9 @@ export enum LiteralsBoolean {
   FALSE = 'false',
 }
 
-export const literalToBoolean = (literal: LiteralsBoolean | undefined): boolean | undefined => {
+export const literalToBoolean = (
+  literal: LiteralsBoolean | undefined
+): boolean | undefined => {
   if (literal === LiteralsBoolean.TRUE) {
     return true
   } else if (literal === LiteralsBoolean.FALSE) {

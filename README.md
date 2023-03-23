@@ -54,19 +54,24 @@ git clone https://github.com/sergio266/Back-Personal-Web-MERN.git
 
 ## Project Scripts
 
+- *"npm run test":* Running this script will start the testing process with Jest (Without Confg).
+
+- *"npm run clean":* Running this script will will permanently delete all files in the 'dist' folder.
+
 - *"npm run swagger":* Running this script will create the files and routes corresponding to the documentation implemented in the controllers of the endpoints of the project.
 
-- *"npm run dev":* Running this script will concurrently execute the *"build"* and *"start"* scripts one after the other, keeping a constant monitor for any changes to re-execute both processes.
+- *"npm run format":* Running this script will format all of the project's code using the Prettier tool under the parameters set in its configuration file.
 
-- *"npm run test":* Running this script will start the testing process with Jest.
+- *"npm run lint":* Running this script you will be able to print to the terminal all those errors and warnings thrown by es-lint, after analyzing the project code according to its configuration.
 
-- *"npm run serve:coverage":* Running this script will shot the test script, then accesses the location of the generated report in html format and mounts it on a local server with the Serve dependency.
+- *"npm run lint-fix":* Running this script you will allow es-lint to fix as many errors and warnings as possible and print the remaining errors and warnings to the terminal, after analyzing the project's code according to its configuration.
 
-- *"npm run build":* Running this script will compile the project defined by the *tsconfig.json* with *tsc*. This compile a set of TypeScript files into a compressed global JS file (development mode).
+- *"npm run dev":* Running this script will  execute the TS code of the application in a development environment, keeping a constant monitor for any changes to re-execute the script.
+
+- *"npm run build":* Running this script will trigger the *clean* script to then compile the project code with *tsc*. This causes the conversion of TypeScript files to generated Javascript files in the 'dist' folder.
 
 - *"npm run start":* Running this script will execute the main compiled JS file in NodeJS using the globally available node command.
 
-- *"npm run build:prod":* Running this script will compile the project defined by the *tsconfig.json* with *tsc*. This compile a set of TypeScript files into a super compressed global JS file (production mode).
 
 
 ## Environment Variables
@@ -76,6 +81,24 @@ You must create an ***.env*** file in the root of the project with the following
 ~~~
     PORT = 8000
 ~~~
+- SECRET_ACC_TOKEN: Secret key used to encrypt access tokens. For instance:
+~~~
+    SECRET_ACC_TOKEN = Y0uRS3Cr3tK3y1
+~~~
+- SECRET_REF_TOKEN: Secret key used to encrypt refresh tokens. For instance:
+~~~
+    SECRET_REF_TOKEN = Y0uRS3Cr3tK3y2
+~~~
+- DB_CONNECTION_PATH: Local or remote hosting address of your Mongodb database. For instance:
+~~~
+    DB_CONNECTION_PATH = mongodb://localhost:27017/yourdatabase
+~~~
+- CORS_ORIGIN: Specify the origin that is allowed to access the resources of the response. For instance:
+~~~
+    CORS_ORIGIN = https://example.org
+~~~
+
+
 
 
 ## Authors 
@@ -88,4 +111,4 @@ No open source project.
 
 ## Project status
 
-In progress...
+Ready!

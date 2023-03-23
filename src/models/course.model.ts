@@ -10,16 +10,14 @@ export interface ICourse {
   miniature?: string
 }
 
-const courseSchema = new Schema<ICourse>(
-  {
-    title: { type: String, trim: true, minlength: 1, required: true },
-    description: { type: String, trim: true, minlength: 1, required: true },
-    url: { type: String, trim: true, minlength: 1, lowercase: true, required: true, unique: true, uniqueCaseInsensitive: true },
-    price: { type: Number, required: true },
-    score: { type: Number, required: true },
-    miniature: { type: String, trim: true, minlength: 1, lowercase: true, unique: true }
-  }
-)
+const courseSchema = new Schema<ICourse>({
+  title: { type: String, trim: true, minlength: 5, required: true },
+  description: { type: String, trim: true, minlength: 5, required: true },
+  url: { type: String, trim: true, minlength: 3, required: true, unique: true, uniqueCaseInsensitive: true },
+  price: { type: Number, required: true, index: false, unique: false },
+  score: { type: Number, required: true, index: false, unique: false },
+  miniature: { type: String, trim: true, minlength: 3, index: false, unique: false, uniqueCaseInsensitive: false }
+})
 courseSchema.plugin(uniqueValidator)
 
 export default model<ICourse>('Course', courseSchema)

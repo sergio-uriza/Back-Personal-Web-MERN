@@ -18,8 +18,19 @@ const storageCourse: StorageEngine = multer.diskStorage({
   }
 })
 
-const fileFilter = (_req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-  const filetypes = /jpeg|jpg|png|gif/
+const storageBlog: StorageEngine = multer.diskStorage({
+  destination: 'public/blog',
+  filename: (_req, file, cb) => {
+    cb(null, uuidv4() + path.extname(file.originalname).toLowerCase())
+  }
+})
+
+const fileFilter = (
+  _req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+): void => {
+  const filetypes = /jpeg|jpg|png/
   const mimetype = filetypes.test(file.mimetype)
   const extname = filetypes.test(path.extname(file.originalname))
   if (mimetype && extname) {
@@ -37,11 +48,18 @@ const uploadAvatar: Multer = multer({
   fileFilter
 })
 
-const uploadMiniature: Multer = multer({
+const uploadCourse: Multer = multer({
   storage: storageCourse,
   limits,
   fileFilter
 })
 
+const uploadBlog: Multer = multer({
+  storage: storageBlog,
+  limits,
+  fileFilter
+})
+
 export const uploadSingleAvatar = uploadAvatar.single('avatar')
-export const uploadSingleMiniature = uploadMiniature.single('miniature')
+export const uploadSingleCourse = uploadCourse.single('miniature')
+export const uploadSingleBlog = uploadBlog.single('miniature')

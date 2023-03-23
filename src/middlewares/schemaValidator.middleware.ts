@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
 import { AnyZodObject, ZodError } from 'zod'
 
-export const schemaValidator = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction): void => {
+export const schemaValidator = (schema: AnyZodObject) => (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   try {
     const request = schema.parse({
       params: req.params,
@@ -15,7 +19,9 @@ export const schemaValidator = (schema: AnyZodObject) => (req: Request, res: Res
     return
   } catch (err) {
     if (err instanceof ZodError) {
-      res.status(400).send(err.issues.map(issue => ({ path: issue.path.join('.'), message: issue.message })))
+      res.status(400).send(err.issues.map(issue => (
+        { path: issue.path.join('.'), message: issue.message }
+      )))
       return
     }
     res.status(500).send({ message: 'Internal Server Error' })

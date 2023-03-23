@@ -3,12 +3,10 @@ import dotenv from 'dotenv'
 
 // Configuration Enviroment Variables
 dotenv.config()
-const user = process.env.DB_USER
-const password = process.env.DB_PASSWORD
-const host = process.env.DB_HOST
+const dbPath: string = process.env.DB_CONNECTION_PATH ?? 'mongodb://localhost:27017/newdb'
 
 // Create MongoDB Connection
 export const connectDataBase: () => Promise<typeof mongoose> = async () => {
   mongoose.set('strictQuery', true)
-  return await mongoose.connect(`mongodb+srv://${user}:${password}@${host}/`)
+  return await mongoose.connect(dbPath)
 }
