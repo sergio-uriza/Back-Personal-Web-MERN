@@ -73,8 +73,8 @@ export class UserController {
       pathOldAvatar = oldUser.avatar
     }
 
-    const user: ObjUserType | null = await User.findByIdAndUpdate(userId, modifyUser, { runValidators: true, new: true, context: 'query' })
-      .select({ _id: 1, firstname: 1, lastname: 1, email: 1, role: 1, active: 1, updatedAt: 1, avatar: 1 })
+    const user: GetMyUserType | null = await User.findByIdAndUpdate(userId, modifyUser, { runValidators: true, new: true, context: 'query' })
+      .select({ _id: 1, firstname: 1, lastname: 1, email: 1, role: 1, avatar: 1 })
       .lean()
       .exec()
 

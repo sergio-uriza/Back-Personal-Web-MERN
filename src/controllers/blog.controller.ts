@@ -1,4 +1,3 @@
-// import mongoose from 'mongoose'
 import Blog from '../models/blog.model'
 import { IUser } from '../models/user.model'
 import { AppError } from '../utils/appError.class'
@@ -78,6 +77,10 @@ export class BlogController {
       .exec()
 
     if (blog == null) throw new AppError(400, 'No personal blog found')
+    if (blog.miniature != null) {
+      const isExistFile = await fs.exists(path.resolve(blog.miniature))
+      if (isExistFile) await fs.unlink(path.resolve(blog.miniature))
+    }
     return { message: 'Personal blog delete successfully' }
   }
 

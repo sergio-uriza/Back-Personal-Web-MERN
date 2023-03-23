@@ -14,7 +14,7 @@
 
 ## Get the project
 
-- [ ] [Go to the repository in gitlab](https://github.com/sergio266/Back-Personal-Web-MERN) and review the project structure, you can download it the *.zip* or just use the command:
+- [ ] [Go to the repository in github](https://github.com/sergio266/Back-Personal-Web-MERN) and review the project structure, you can download it the *.zip* or just use the command:
 
 ```
 cd folder_location
@@ -51,26 +51,28 @@ git clone https://github.com/sergio266/Back-Personal-Web-MERN.git
 
 - ***`Supertest:`*** It provides a high-level abstraction for testing HTTP, while still allowing you to drop down to the lower-level API provided by superagent.
 
+- ***`Zod:`*** Zod is a TypeScript-first schema declaration and validation library used to process any data type, from a simple string to a complex nested object. It is designed to be as developer-friendly as possible. Its goal is to eliminate duplicative type declarations. Zod will automatically infer the static TypeScript type.
+
 
 ## Project Scripts
 
-- *"npm run test":* Running this script will start the testing process with Jest (Without Confg).
+- *"test":* Running this script will start the testing process with Jest (Without Confg).
 
-- *"npm run clean":* Running this script will will permanently delete all files in the 'dist' folder.
+- *"clean":* Running this script will will permanently delete all files in the 'dist' folder.
 
-- *"npm run swagger":* Running this script will create the files and routes corresponding to the documentation implemented in the controllers of the endpoints of the project.
+- *"swagger":* Running this script will create the files and routes corresponding to the documentation implemented in the controllers of the endpoints of the project.
 
-- *"npm run format":* Running this script will format all of the project's code using the Prettier tool under the parameters set in its configuration file.
+- *"format":* Running this script will format all of the project's code using the Prettier tool under the parameters set in its configuration file.
 
-- *"npm run lint":* Running this script you will be able to print to the terminal all those errors and warnings thrown by es-lint, after analyzing the project code according to its configuration.
+- *"lint":* Running this script you will be able to print to the terminal all those errors and warnings thrown by es-lint, after analyzing the project code according to its configuration.
 
-- *"npm run lint-fix":* Running this script you will allow es-lint to fix as many errors and warnings as possible and print the remaining errors and warnings to the terminal, after analyzing the project's code according to its configuration.
+- *"lint-fix":* Running this script you will allow es-lint to fix as many errors and warnings as possible and print the remaining errors and warnings to the terminal, after analyzing the project's code according to its configuration.
 
-- *"npm run dev":* Running this script will  execute the TS code of the application in a development environment, keeping a constant monitor for any changes to re-execute the script.
+- *"dev":* Running this script will  execute the TS code of the application in a development environment, keeping a constant monitor for any changes to re-execute the script.
 
-- *"npm run build":* Running this script will trigger the *clean* script to then compile the project code with *tsc*. This causes the conversion of TypeScript files to generated Javascript files in the 'dist' folder.
+- *"build":* Running this script will trigger the *clean* script to then compile the project code with *tsc*. This causes the conversion of TypeScript files to generated Javascript files in the 'dist' folder.
 
-- *"npm run start":* Running this script will execute the main compiled JS file in NodeJS using the globally available node command.
+- *"start":* Running this script will execute the main compiled JS file in NodeJS using the globally available node command.
 
 
 

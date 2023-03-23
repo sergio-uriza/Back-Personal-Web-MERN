@@ -1,0 +1,991 @@
+{
+	"info": {
+		"_postman_id": "b96d227b-4501-4032-b8e4-2abb0cedec5e",
+		"name": "Back-Personal-Web-MERN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Login User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"test@test.com\",\r\n\t\"password\": \"Aa1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/auth/login",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\": \"Test\",\r\n    \"lastname\": \"Test\",\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"Aa1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/auth/register",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Access Token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/auth/refresh",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "Get Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/user/my",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"user",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/user?active=true",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstname",
+									"value": "Test",
+									"type": "default"
+								},
+								{
+									"key": "lastname",
+									"value": "Test",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Aa1234",
+									"type": "default"
+								},
+								{
+									"key": "role",
+									"value": "user",
+									"type": "default"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/user",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Me",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstname",
+									"value": "Test",
+									"type": "default"
+								},
+								{
+									"key": "lastname",
+									"value": "Test",
+									"type": "default"
+								},
+								{
+									"key": "oldPassword",
+									"value": "Aa1234",
+									"type": "default"
+								},
+								{
+									"key": "newPassword",
+									"value": "Aa1234",
+									"type": "default"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/user/my",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"user",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstname",
+									"value": "Test",
+									"type": "default"
+								},
+								{
+									"key": "lastname",
+									"value": "Test",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Aa1234",
+									"type": "default"
+								},
+								{
+									"key": "role",
+									"value": "user",
+									"type": "default"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/user/641bad76b61a68b0c83cf18b",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"user",
+								"641bad76b61a68b0c83cf18b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/user/641bad76b61a68b0c83cf18b",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"user",
+								"641bad76b61a68b0c83cf18b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Menus",
+			"item": [
+				{
+					"name": "Get Menus",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/menu?active=true",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"menu"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Menu",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Menu\",\r\n    \"path\": \"/menu\",\r\n    \"order\": 60,\r\n    \"active\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/menu",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Menu",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Menu1\",\r\n    \"path\": \"/menu1\",\r\n    \"order\": 61,\r\n    \"active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/menu/641bb1baf87437d873d19a6d",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"menu",
+								"641bb1baf87437d873d19a6d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Menu",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/menu/641bb1baf87437d873d19a6d",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"menu",
+								"641bb1baf87437d873d19a6d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "Get Courses",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/course?limit=15&page=1",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"course"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "15"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Course",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "New Course",
+									"type": "default"
+								},
+								{
+									"key": "description",
+									"value": "New description to test course",
+									"type": "default"
+								},
+								{
+									"key": "url",
+									"value": "https://new-description-to-test-course",
+									"type": "default"
+								},
+								{
+									"key": "price",
+									"value": "50000",
+									"type": "default"
+								},
+								{
+									"key": "score",
+									"value": "1.1",
+									"type": "default"
+								},
+								{
+									"key": "miniature",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/course",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"course"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Course",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "New Course 1",
+									"type": "default"
+								},
+								{
+									"key": "description",
+									"value": "New description to test course 1",
+									"type": "default"
+								},
+								{
+									"key": "url",
+									"value": "https://new-description-to-test-course-1",
+									"type": "default"
+								},
+								{
+									"key": "price",
+									"value": "51000",
+									"type": "default"
+								},
+								{
+									"key": "score",
+									"value": "5",
+									"type": "default"
+								},
+								{
+									"key": "miniature",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/course/641bb40cf87437d873d19a89",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"course",
+								"641bb40cf87437d873d19a89"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Course",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/course/641bb40cf87437d873d19a89",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"course",
+								"641bb40cf87437d873d19a89"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blogs",
+			"item": [
+				{
+					"name": "Get by Path Blog",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/blog/path-test-blog",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"blog",
+								"path-test-blog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Blogs Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/blog/my",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"blog",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Blogs",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/blog?limit=10&page=1",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"blog"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Blog",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Title New Blog to Test",
+									"type": "default"
+								},
+								{
+									"key": "content",
+									"value": "Description to the new blog to test",
+									"type": "default"
+								},
+								{
+									"key": "path",
+									"value": "/description-to-the-new-blog-to-test",
+									"type": "default"
+								},
+								{
+									"key": "miniature",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/blog",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"blog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Blog",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Title New Blog to Test 1",
+									"type": "default"
+								},
+								{
+									"key": "content",
+									"value": "Description to the new blog to test 1",
+									"type": "default"
+								},
+								{
+									"key": "path",
+									"value": "/description-to-the-new-blog-to-test-1",
+									"type": "default"
+								},
+								{
+									"key": "miniature",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/blog/641bb66cf87437d873d19aa6",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"blog",
+								"641bb66cf87437d873d19aa6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Blog Me",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Title New Blog to Test 1",
+									"type": "default"
+								},
+								{
+									"key": "content",
+									"value": "Description to the new blog to test 1",
+									"type": "default"
+								},
+								{
+									"key": "path",
+									"value": "/description-to-the-new-blog-to-test-1",
+									"type": "default"
+								},
+								{
+									"key": "miniature",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/blog/my/641bb66cf87437d873d19aa6",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"blog",
+								"my",
+								"641bb66cf87437d873d19aa6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Blog Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Title New Blog to Test 1",
+									"type": "default"
+								},
+								{
+									"key": "content",
+									"value": "Description to the new blog to test 1",
+									"type": "default"
+								},
+								{
+									"key": "path",
+									"value": "/description-to-the-new-blog-to-test-1",
+									"type": "default"
+								},
+								{
+									"key": "miniature",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/blog/641bb66cf87437d873d19aa6",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"blog",
+								"641bb66cf87437d873d19aa6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Blog Me",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Title New Blog to Test 1",
+									"type": "default"
+								},
+								{
+									"key": "content",
+									"value": "Description to the new blog to test 1",
+									"type": "default"
+								},
+								{
+									"key": "path",
+									"value": "/description-to-the-new-blog-to-test-1",
+									"type": "default"
+								},
+								{
+									"key": "miniature",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/blog/my/641bb66cf87437d873d19aa6",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"blog",
+								"my",
+								"641bb66cf87437d873d19aa6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Newsletters",
+			"item": [
+				{
+					"name": "Get Emails Newsletter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/newsletter?limit=10&page=1&order=-1",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"newsletter"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "order",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subscribe Email Newsletter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"test@test.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_PATH}}/newsletter",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"newsletter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Email Newsletter",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_PATH}}/newsletter/641bb8b0594719939214fec8",
+							"host": [
+								"{{BASE_PATH}}"
+							],
+							"path": [
+								"newsletter",
+								"641bb8b0594719939214fec8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{ACC_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
